@@ -1,44 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect } from "react";
+import { useEmailCapture } from "@/hooks/useEmailCapture";
 
-export default function EmailCapture({ variant = "default" }: { variant?: "default" | "compact" }) {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+export default function EmailCapture({ dark = false }: { dark?: boolean }) {
+  const { email, setEmail, status, submit } = useEmailCapture();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    const stored = JSON.parse(localStorage.getItem("flowos_emails") || "[]");
-    stored.push({ email, date: new Date().toISOString() });
-    localStorage.setItem("flowos_emails", JSON.stringify(stored));
-    setSubmitted(true);
-    setEmail("");
-  };
+  useEffect(() => {
+    if (status === "done") {
+      // Dynamically load canvas-confetti from CDN
+      const script = document.createElement("script");
+      script.src =
+        "https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js";
+      script.onload = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const confetti = (window as any).confetti;
+        if (confetti) {
+          confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+        }
+      };
+      document.head.appendChild(script);
+    }
+  }, [status]);
 
-  if (submitted) {
+  if (status === "done") {
     return (
-      <p className="text-brand-accent font-semibold py-3">
-        Thanks! We&apos;ll contact you soon. 🎉
+      <p className="text-brand-accent font-semibold text-lg py-3 animate-fade-up">
+        🎉 You&apos;re on the list! We&apos;ll be in touch.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className={`flex ${variant === "compact" ? "flex-col sm:flex-row" : "flex-col sm:flex-row"} gap-3 w-full max-w-md`}>
+    <form
+      onSubmit={submit}
+      className="flex flex-col sm:flex-row gap-3 w-full max-w-md"
+    >
       <input
         type="email"
         required
-        placeholder="Enter your email"
+        placeholder="your@business.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-accent text-gray-900"
+        className={`flex-1 px-5 py-3.5 rounded-full border text-sm focus:outline-none focus:ring-2 focus:ring-brand-accent transition-all ${
+          dark
+            ? "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15"
+            : "bg-white border-gray-200 text-brand-text placeholder:text-gray-400"
+        }`}
       />
       <button
         type="submit"
-        className="px-6 py-3 bg-brand-accent text-white font-semibold rounded-lg hover:bg-emerald-600 transition-colors whitespace-nowrap"
+        disabled={status === "sending"}
+        className="btn-ripple px-6 py-3.5 bg-brand-accent text-white font-semibold rounded-full hover:bg-emerald-500 transition-all whitespace-nowrap text-sm disabled:opacity-70"
       >
-        Get Early Access
+        {status === "sending" ? "Sending..." : "Get Early Access →"}
       </button>
     </form>
   );

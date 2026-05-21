@@ -7,11 +7,121 @@ html {
 }
 
 body {
-  @apply antialiased text-gray-900;
+  @apply antialiased;
+  background-color: #f8f7f4;
+  color: #1a1a2e;
 }
 
-@layer utilities {
-  .gradient-bg {
-    background: linear-gradient(135deg, #1e3a5f 0%, #0f2744 50%, #1e3a5f 100%);
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0d1117;
+}
+::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+/* Scroll progress bar */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+  background: #0d1117;
+  border-radius: 1rem;
+}
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 1.1rem;
+  background: linear-gradient(135deg, #10b981, #1e3a5f, #10b981);
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+  z-index: -1;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Fade-up entrance */
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Navbar link underline from center */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background: #10b981;
+  transition: left 0.25s ease, right 0.25s ease;
+}
+.nav-link:hover::after {
+  left: 0;
+  right: 0;
+}
+
+/* Button ripple */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple:active {
+  transform: scale(0.97);
+}
+
+/* Typewriter cursor */
+.typewriter-cursor::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+  color: #10b981;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

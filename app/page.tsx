@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "./sections/Hero";
+import SocialProofBar from "./sections/SocialProofBar";
 import Features from "./sections/Features";
 import HowItWorks from "./sections/HowItWorks";
 import Pricing from "./sections/Pricing";
@@ -12,6 +13,7 @@ export default function Home() {
     <main>
       <Navbar />
       <Hero />
+      <SocialProofBar />
       <Features />
       <HowItWorks />
       <Pricing />
