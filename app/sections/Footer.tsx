@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Mail, Phone, MapPin, X } from "lucide-react";
 
 function TwitterIcon() {
@@ -78,20 +79,20 @@ export default function Footer() {
                 </li>
               ))}
               <li>
-                <button
-                  onClick={() => setShowPrivacy(true)}
+                <Link
+                  href="/privacy-policy"
                   className="hover:text-brand-accent transition-colors"
                 >
                   Privacy Policy
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => setShowPrivacy(true)}
+                <Link
+                  href="/terms"
                   className="hover:text-brand-accent transition-colors"
                 >
                   Terms of Service
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
